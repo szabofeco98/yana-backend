@@ -1,0 +1,5 @@
+CREATE TABLE SECURITY_USER (
+    ID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(200) NOT NULL
+)

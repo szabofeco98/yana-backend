@@ -11,6 +11,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  data:
+    redis:
+      host: redis
+      port: 6379
 
 #spring:
 #  autoconfigure:

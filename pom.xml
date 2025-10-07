@@ -28,12 +28,6 @@
 	</scm>
 	<properties>
 		<java.version>24</java.version>
-        <!--suppress UnresolvedMavenProperty -->
-        <database-url>jdbc:postgresql://${env.POSTGRES_HOST}:${env.POSTGRES_PORT}/${env.POSTGRES_DB}</database-url>
-        <!--suppress UnresolvedMavenProperty -->
-        <database-username>${env.POSTGRES_USER}</database-username>
-        <!--suppress UnresolvedMavenProperty -->
-        <database-password>${env.POSTGRES_PASSWORD}</database-password>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.flywaydb.version>11.12.0</org.flywaydb.version>
     </properties>
@@ -95,10 +89,13 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <profiles>${spring.profiles.active}</profiles>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
@@ -145,5 +142,34 @@
             </plugin>
 		</plugins>
 	</build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <database-url>jdbc:postgresql://localhost:5432/mydb</database-url>
+                <database-username>myuser</database-username>
+                <database-password>mypassword</database-password>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <!-- Production profile -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!-- use environment variables -->
+                <!--suppress UnresolvedMavenProperty -->
+                <database-url>jdbc:postgresql://${env.POSTGRES_HOST}:${env.POSTGRES_PORT}/${env.POSTGRES_DB}</database-url>
+                <!--suppress UnresolvedMavenProperty -->
+                <database-username>${env.POSTGRES_USER}</database-username>
+                <!--suppress UnresolvedMavenProperty -->
+                <database-password>${env.POSTGRES_PASSWORD}</database-password>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
